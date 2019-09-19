@@ -14,7 +14,7 @@ export default class Index extends Component {
             url: 'https://i0ny64i41e.execute-api.us-east-2.amazonaws.com/default',
             // data: qs.stringify(data),
             headers: {
-                'Access-Control-Allow-Origin': 'http://localhost:3000',
+                'Access-Control-Allow-Origin': 'https://master.d30mjf2qmj8bqd.amplifyapp.com/index',
                 'Access-Control-Allow-Credentials': 'true'
             },
             // json: true
