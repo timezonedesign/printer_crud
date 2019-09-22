@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import TableRow from './TableRow';
 
 export default class Index extends Component {
@@ -9,25 +9,21 @@ export default class Index extends Component {
         this.state = { printer: [] };
     }
     componentDidMount() {
-        var authOptions = {
+        fetch('https://ma520tn9p2.execute-api.us-east-2.amazonaws.com/default/myFirstLambdaFunctionForPrinters',{
             method: 'GET',
-            url: 'https://i0ny64i41e.execute-api.us-east-2.amazonaws.com/default',
-            // data: qs.stringify(data),
-            headers: {
-                'Access-Control-Allow-Origin': 'https://master.d30mjf2qmj8bqd.amplifyapp.com/index',
-                'Access-Control-Allow-Credentials': 'true'
-            },
-            // json: true
-        };
- 
-        axios(authOptions)
-            .then(response => {
-                this.setState({ printer: JSON.parse(response.data) });
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
+            headers:{
+                'Content-Type': 'application/json',
+                'x-api-key': '3A4ef8N7hG3UjbuARDz994qjLNdV6zM56omEUL89'
+            }
+        })
+        .then((response) => response.json())
+        .then((responseJSON) => {
+        // do stuff with responseJSON here...
+        this.setState({ printer:responseJSON})
+        })
+
     }
+
     tabRow() {
         return this.state.printer.map(function (object, i) {
             return <TableRow obj={object} key={i} />;

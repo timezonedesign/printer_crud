@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 
 export default class Edit extends Component {
     constructor(props) {
@@ -12,21 +12,26 @@ export default class Edit extends Component {
         this.state = {
             printer_name: '',
             printer_ip: '',
-            status: ''
+            printer_status: ''
         }
     }
 
     componentDidMount() {
-        axios.get('http://localhost:4000/business/edit/' + this.props.match.params.id)
-            .then(response => {
+        var send_data = 'https://2zrpoqfr5c.execute-api.us-east-2.amazonaws.com/default/FetchOnePrinterLambdaFunction?date='+this.props.match.params.id;
+            fetch(send_data,{
+                method: 'GET',
+                headers:{
+                    'Content-Type': 'application/json',
+                    'x-api-key': 'TIOdaptLaM28OMktdQ45H4IQXd3x6ea411XO5XJZ'
+                }
+            }).then(response => response.json())
+            .then((responseJSON) => {
                 this.setState({
-                    printer_name: response.data.printer_name,
-                    printer_ip: response.data.printer_ip,
-                    status: response.data.status
-                });
-            })
-            .catch(function (error) {
-                console.log(error);
+                    date: responseJSON.date,
+                    printer_name: responseJSON.printer_name,
+                    printer_ip: responseJSON.printer_ip,
+                    printer_status: responseJSON.printer_status
+                })
             })
     }
 
@@ -42,19 +47,20 @@ export default class Edit extends Component {
     }
     onChangeStatus(e) {
         this.setState({
-            status: e.target.value
+            printer_status: e.target.value
         })
     }
 
     onSubmit(e) {
         e.preventDefault();
-        const obj = {
-            printer_name: this.state.printer_name,
-            printer_ip: this.state.printer_ip,
-            status: this.state.status
-        };
-        axios.post('http://localhost:4000/business/update/' + this.props.match.params.id, obj)
-            .then(res => console.log(res.data));
+        var send_data = 'https://fx7rtpuhef.execute-api.us-east-2.amazonaws.com/default/UpdatePrinterLambdaFunction?date='+this.props.match.params.date+'&printer_name='+this.state.printer_name+'&printer_ip='+this.state.printer_ip+'&printer_status='+this.state.printer_status;
+        fetch(send_data,{
+            headers:{
+                'Content-Type': 'application/json',
+                'x-api-key': '17SHiVjukcNwatOcFFZ47pQUdHB8B5U3ezRAm5r4'
+            },
+            method: 'PUT'
+        }).then(response => response.json())
 
         this.props.history.push('/index');
     }
@@ -62,7 +68,7 @@ export default class Edit extends Component {
     render() {
         return (
             <div style={{ marginTop: 10 }}>
-                <h3 align="center">Update Business</h3>
+                <h3 align="center">Update Printer</h3>
                 <form onSubmit={this.onSubmit}>
                     <div className="form-group">
                         <label>Printer Name:  </label>
@@ -85,7 +91,7 @@ export default class Edit extends Component {
                         <label>Status: </label>
                         <input type="text"
                             className="form-control"
-                            value={this.state.status}
+                            value={this.state.printer_status}
                             onChange={this.onChangeStatus}
                         />
                     </div>

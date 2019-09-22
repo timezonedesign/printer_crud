@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+// import axios from 'axios';
 
 class TableRow extends Component {
 
@@ -9,9 +9,14 @@ class TableRow extends Component {
         this.delete = this.delete.bind(this);
     }
     delete() {
-        axios.get('http://localhost:4000/business/delete/' + this.props.obj._id)
-            .then(console.log('Deleted'))
-            .catch(err => console.log(err))
+        var send_data = 'https://s5t6r0ozpl.execute-api.us-east-2.amazonaws.com/default/DeletePrinterLambdaFunction?date='+this.props.obj.date;
+        fetch(send_data,{
+            method: 'DELETE',
+            headers:{
+                'Content-Type': 'application/json',
+                'x-api-key': '7JrM9kXnVE3M504Gljbi52omKQ3949jJ91X75oj6'
+            }
+        }).then(response => response.json())
     }
     render() {
         return (
@@ -20,13 +25,13 @@ class TableRow extends Component {
                     {this.props.obj.printer_name}
                 </td>
                 <td>
-                    {this.props.obj.printer_id}
+                    {this.props.obj.printer_ip}
                 </td>
                 <td>
-                    {this.props.obj.status}
+                    {this.props.obj.printer_status}
                 </td>
                 <td>
-                    <Link to={"/edit/" + this.props.obj._id} className="btn btn-primary">Edit</Link>
+                    <Link to={"/edit/" + this.props.obj.date} className="btn btn-primary">Edit</Link>
                 </td>
                 <td>
                     <Link to={"/index"} onClick={this.delete} className="btn btn-danger">Delete</Link>

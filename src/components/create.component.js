@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 
 export default class Create extends Component {
     constructor(props) {
@@ -12,7 +12,7 @@ export default class Create extends Component {
         this.state = {
             printer_name: '',
             printer_ip: '',
-            status: ''
+            printer_status: ''
         }
     }
     onChangePrinterName(e) {
@@ -27,24 +27,25 @@ export default class Create extends Component {
     }
     onChangeStatus(e) {
         this.setState({
-            status: e.target.value
+            printer_status: e.target.value
         })
     }
 
     onSubmit(e) {
         e.preventDefault();
-        const obj = {
-            printer_name: this.state.printer_name,
-            printer_ip: this.state.printer_ip,
-            status: this.state.status
-        };
-        axios.post('http://localhost:4000/business/add', obj)
-            .then(res => console.log(res.data));
+        var send_data = 'https://q5gsfo2cj9.execute-api.us-east-2.amazonaws.com/default/AddPrinterLambdaFunction?'+'printer_name='+this.state.printer_name+'&printer_ip='+this.state.printer_ip+'&printer_status='+this.state.printer_status;
+        fetch(send_data,{
+            headers:{
+                'Content-Type': 'application/json',
+                'x-api-key': 'EeRMMn1zO1CjTqROPc2Q868Nc0WEfSu32gebp0Cd'
+            },
+            method: 'POST'
+        }).then(response => response.json())
 
         this.setState({
             printer_name: '',
             printer_ip: '',
-            status: ''
+            printer_status: ''
         })
     }
 
@@ -74,7 +75,7 @@ export default class Create extends Component {
                         <label>Status: </label>
                         <input type="text"
                             className="form-control"
-                            value={this.state.status}
+                            value={this.state.printer_status}
                             onChange={this.onChangeStatus}
                         />
                     </div>
